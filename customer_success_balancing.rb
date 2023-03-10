@@ -2,49 +2,49 @@ require 'minitest/autorun'
 require 'timeout'
 
 class CustomerSuccessBalancing
-  def initialize(customer_success, customers, away_customer_success)
-    @customer_success = customer_success
-    @customers = customers
-    @away_customer_success = away_customer_success
-  end
-  # Returns the ID of the customer success with most customers
-  def execute
-    # Write your solution here
+	def initialize(customer_success, customers, away_customer_success)
+		@customer_success = customer_success
+		@customers = customers
+		@away_customer_success = away_customer_success
+	end
+	# Returns the ID of the customer success with most customers
+	def execute
+		# Write your solution here
 
-    customer_success_with_most_clients = -1
-    highest_client_quantity = 0
+		customer_success_with_most_clients = -1
+		highest_client_quantity = 0
 
-    active_customer_success = @customer_success.reject {|cs| @away_customer_success.include? cs[:id]}
+		active_customer_success = @customer_success.reject {|cs| @away_customer_success.include? cs[:id]}
 
-    active_customer_success_ordered_by_minimun_score = active_customer_success.sort {|a,b| a[:score] -  b[:score]}
+		active_customer_success_ordered_by_minimun_score = active_customer_success.sort {|a,b| a[:score] -  b[:score]}
 
 
-    active_customer_success_ordered_by_minimun_score.each do |current_customer_success| 
-      client_quantity = 0
+		active_customer_success_ordered_by_minimun_score.each do |current_customer_success| 
+			client_quantity = 0
 
-      @customers.each do |customer| 
-          is_cs_matches_customer_score = customer[:score] <= current_customer_success[:score]
-          is_customer_not_assigned = !customer[:assigned]
+			@customers.each do |customer| 
+				is_cs_matches_customer_score = customer[:score] <= current_customer_success[:score]
+				is_customer_not_assigned = !customer[:assigned]
 
-          if is_cs_matches_customer_score && is_customer_not_assigned
-              client_quantity = client_quantity + 1
-              customer[:assigned] = true
-          end
-      end
+				if is_cs_matches_customer_score && is_customer_not_assigned
+					client_quantity = client_quantity + 1
+					customer[:assigned] = true
+				end
+			end
 
-      if client_quantity > highest_client_quantity
-          highest_client_quantity = client_quantity
-          customer_success_with_most_clients = current_customer_success[:id]
+			if client_quantity > highest_client_quantity
+				highest_client_quantity = client_quantity
+				customer_success_with_most_clients = current_customer_success[:id]
 
-      elsif  client_quantity === highest_client_quantity
-        customer_success_with_most_clients = 0
-      end
-    end
-
-   # print active_customer_success
-  return customer_success_with_most_clients
-  end
+			elsif  client_quantity === highest_client_quantity
+				customer_success_with_most_clients = 0
+			end
+		end
+    
+		return customer_success_with_most_clients
+	end
 end
+
 
 class CustomerSuccessBalancingTests < Minitest::Test
   def test_scenario_one
